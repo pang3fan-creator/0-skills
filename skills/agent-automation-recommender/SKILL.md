@@ -8,7 +8,12 @@ tools: Read, Glob, Grep, Bash
 
 Analyze codebase patterns to recommend tailored agent automations across all extensibility options.
 
-**This skill is read-only.** It analyzes the codebase and outputs recommendations. It does NOT create or modify any files. Users implement the recommendations themselves or ask the agent separately to help build them.
+**This skill is read-only.** It analyzes the codebase and outputs recommendations. It must NOT create, edit, or delete files.
+
+If the user asks to implement recommendations later, first confirm:
+- Which agent should be configured
+- Whether the change is project-level or global-level
+- Which files will be touched
 
 ## Output Guidelines
 
@@ -29,6 +34,16 @@ Analyze codebase patterns to recommend tailored agent automations across all ext
 
 ## Workflow
 
+### Phase 0: Agent and Scope Detection
+
+Before making recommendations, determine the current context:
+
+- **Active agent runtime**: Codex, OpenCode, Claude, Cursor, or unknown.
+- **Target scope**: project-level, user/global-level, team-shared, or read-only.
+- **Existing config files** for that target only.
+
+If the user didn't specify runtime or scope, ask one concise clarification question before proceeding.
+
 ### Phase 1: Codebase Analysis
 
 Gather project context:
@@ -42,7 +57,11 @@ cat package.json 2>/dev/null | head -50
 cat package.json 2>/dev/null | grep -E '"(react|vue|angular|next|express|fastapi|django|prisma|supabase|convex|stripe)"'
 
 # Check for existing agent configuration files
-ls -la .opencode/ .claude/ .cursor/ .github/ .agents/ AGENTS.md CLAUDE.md 2>/dev/null
+ls -la .opencode/ .codex/ .claude/ .cursor/ .github/ .agents/ AGENTS.md CLAUDE.md 2>/dev/null
+
+# Scan for already-configured automations
+ls -la .opencode/agents/*.md .opencode/skills/*/SKILL.md .opencode/plugins/*.js 2>/dev/null
+ls -la ~/.codex/config.toml ~/.codex/AGENTS.md ~/.codex/skills/ 2>/dev/null
 
 # Analyze project structure
 ls -la src/ app/ lib/ tests/ components/ pages/ api/ 2>/dev/null
@@ -141,10 +160,16 @@ See [references/plugins-reference.md](references/plugins-reference.md) for avail
 
 Format recommendations clearly. **Only include 1-2 recommendations per category** - the most valuable ones for this specific codebase. Skip categories that aren't relevant.
 
+**Status grouping**: Scan results should be grouped before recommending:
+- **Already configured** — acknowledge and skip (don't re-recommend)
+- **Missing** — primary recommendations
+- **Misplaced** — e.g. OpenCode config found but user is on Codex
+- **Recommended later** — useful but lower priority
+
 ```markdown
 ## Agent Automation Recommendations
 
-I've analyzed your codebase and identified the top automations for each category. Here are my top 1-2 recommendations per type:
+I've analyzed your codebase and identified the top automations for each category.
 
 ### Codebase Profile
 - **Type**: [detected language/runtime]
@@ -156,39 +181,66 @@ I've analyzed your codebase and identified the top automations for each category
 ### 🔌 MCP Servers
 
 #### [server name]
-**Why**: [specific reason based on detected libraries]
-**Note**: MCP is an open standard - supported by most modern AI coding tools
+- **Agent**: [Codex / OpenCode / Claude / Cursor]
+- **Scope**: [project-level / global-level / team-shared]
+- **Target file**: [e.g. AGENTS.md, opencode.json]
+- **Status**: [missing / already configured / misplaced / recommended later]
+- **Why**: [specific reason based on detected libraries]
 
 ---
 
 ### 🎯 Skills
 
 #### [skill name]
-**Why**: [specific reason]
-**Create**: A skill file (SKILL.md) with instructions for the task
+- **Agent**: [Codex / OpenCode / Claude / Cursor]
+- **Scope**: [project-level / global-level / team-shared]
+- **Target file**: [e.g. AGENTS.md, opencode.json]
+- **Status**: [missing / already configured / misplaced / recommended later]
+- **Why**: [specific reason]
 
 ---
 
 ### ⚡ Hooks
 
 #### [hook name]
-**Why**: [specific reason based on detected config]
-**Description**: [what the hook should do, e.g., "auto-format on edit"]
+- **Agent**: [Codex / OpenCode / Claude / Cursor]
+- **Scope**: [project-level / global-level / team-shared]
+- **Target file**: [e.g. AGENTS.md, opencode.json]
+- **Status**: [missing / already configured / misplaced / recommended later]
+- **Why**: [specific reason based on detected config]
 
 ---
 
 ### 🤖 Subagents
 
 #### [agent name]
-**Why**: [specific reason based on codebase patterns]
-**Description**: [what the subagent should review or generate]
+- **Agent**: [Codex / OpenCode / Claude / Cursor]
+- **Scope**: [project-level / global-level / team-shared]
+- **Target file**: [e.g. AGENTS.md, opencode.json]
+- **Status**: [missing / already configured / misplaced / recommended later]
+- **Why**: [specific reason based on codebase patterns]
 
 ---
 
 **Want more?** Ask for additional recommendations for any specific category (e.g., "show me more MCP server options" or "what other hooks would help?").
 
-**Want help implementing any of these?** Just ask and I can help you set up any of the recommendations above.
+**Want help implementing any of these?** Ask with a specific agent and scope — e.g. "Implement this for Codex at project scope".
 ```
+
+## Agent Config Mapping
+
+### Codex
+- Project instructions: repo `AGENTS.md`
+- Global instructions: `~/.codex/AGENTS.md`
+- Global skills: `~/.codex/skills/<name>/SKILL.md`
+- MCP servers: `~/.codex/config.toml`
+- Do not modify `.opencode/` unless explicitly asked.
+
+### OpenCode
+- Project config: `opencode.json`
+- Project agents: `.opencode/agents/*.md`
+- Project skills: `.opencode/skills/*/SKILL.md`
+- Project plugins: `.opencode/plugins/*.js`
 
 ## Decision Framework
 
