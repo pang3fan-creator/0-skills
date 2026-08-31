@@ -1,0 +1,151 @@
+{
+  "skill_name": "seo-preflight-gate",
+  "evals": [
+    {
+      "id": 0,
+      "name": "sr-fully-compliant",
+      "prompt": "The article page https://example.com/blog/building-a-backlink-checker is about to ship to production. Run the SEO pre-flight gate on it. The preview server-side HTML is in evals/files/eval-0/page.html, the site sitemap is in evals/files/eval-0/sitemap.xml, an internal listing page is in evals/files/eval-0/index.html, and context about the page (sibling translations, HTTP status) is in evals/files/eval-0/context.md. Produce a full gate report with PASS/FAIL verdict per check, concrete evidence, and fix suggestions for any FAIL.",
+      "expected_output": "A gate report showing all applicable checks PASS, overall verdict PASS, with concrete evidence quoted from the HTML.",
+      "files": ["evals/files/eval-0/page.html", "evals/files/eval-0/sitemap.xml", "evals/files/eval-0/index.html", "evals/files/eval-0/context.md"],
+      "assertions": [
+        "The report states an overall verdict of PASS for this fully compliant page",
+        "The report produces a verdict for every applicable check (HTTP status, canonical, robots, server-side content, sitemap, internal links)",
+        "Check 4 (server-side content) is marked PASS with evidence that the title, single H1, and body text are present in the raw server HTML",
+        "The report does not falsely flag a problem on a clean page",
+        "The output quotes concrete evidence (e.g. an actual tag or URL) rather than only vague statements",
+        "The report has seven numbered sections in order 1 to 7",
+        "Each of the seven sections contains a Verdict, Evidence, and Fix field",
+        "Check 5 (hreflang) is explicitly marked N/A (does not apply) for this single-language page, not PASS and not omitted",
+        "The overall Verdict is stated as exactly PASS (not a synonym like 'ready to ship' or 'no issues')"
+      ]
+    },
+    {
+      "id": 1,
+      "name": "client-only-heading",
+      "prompt": "The landing page https://example.com/tools/backlink-analyzer is about to ship to production. Run the SEO pre-flight gate on it. The preview server-side HTML is in evals/files/eval-1/page.html, the site sitemap is in evals/files/eval-1/sitemap.xml, an internal listing page is in evals/files/eval-1/index.html, and context is in evals/files/eval-1/context.md. Produce a full gate report with PASS/FAIL verdict per check, concrete evidence, and fix suggestions for any FAIL.",
+      "expected_output": "A gate report that FLAGS a problem with server-side content — the H1 is only present after client-side rendering, so check #4 must FAIL.",
+      "files": ["evals/files/eval-1/page.html", "evals/files/eval-1/sitemap.xml", "evals/files/eval-1/index.html", "evals/files/eval-1/context.md"],
+      "assertions": [
+        "Check 4 (server-side content) is flagged FAIL, not PASS",
+        "The report states the H1 is absent from the raw server HTML or only present client-side",
+        "The report gives an overall verdict of FAIL (the page should not ship as-is)",
+        "The report explains the risk that an H1 present only in client-side JS may not be seen by a crawler",
+        "The report includes a concrete fix (e.g. server-render the H1 and body into the HTML)",
+        "The report has seven numbered sections in order 1 to 7",
+        "Each of the seven sections contains a Verdict, Evidence, and Fix field",
+        "The overall Verdict is stated as exactly FAIL"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "missing-hreflang-pair",
+      "prompt": "The English article https://example.com/blog/what-is-nofollow is about to ship to production. It has a Chinese sibling at https://example.com/zh/blog/what-is-nofollow. Run the SEO pre-flight gate on the English page. The preview server-side HTML is in evals/files/eval-2/page.html, the site sitemap is in evals/files/eval-2/sitemap.xml, an internal listing page is in evals/files/eval-2/index.html, and context is in evals/files/eval-2/context.md. Produce a full gate report with PASS/FAIL verdict per check, concrete evidence, and fix suggestions for any FAIL.",
+      "expected_output": "A gate report that FLAGS check #5 (hreflang) as FAIL because the hreflang pair is incomplete/missing x-default, with evidence from the HTML.",
+      "files": ["evals/files/eval-2/page.html", "evals/files/eval-2/sitemap.xml", "evals/files/eval-2/index.html", "evals/files/eval-2/context.md"],
+      "assertions": [
+        "Check 5 (hreflang) is flagged FAIL for current-page completeness, not PASS",
+        "The report identifies that the missing Chinese (zh) hreflang pair is the issue",
+        "The report identifies that x-default hreflang is missing",
+        "The report gives an overall verdict of FAIL",
+        "The report references the Chinese sibling URL https://example.com/zh/blog/what-is-nofollow as the pairing target",
+        "The report has seven numbered sections in order 1 to 7",
+        "Each of the seven sections contains a Verdict, Evidence, and Fix field",
+        "The report notes that reciprocal hreflang (whether the Chinese page links back) cannot be verified from a single page"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "unexpected-noindex",
+      "prompt": "The pricing page https://example.com/pricing is about to ship to production. Run the SEO pre-flight gate on it. The preview server-side HTML is in evals/files/eval-3/page.html, the site sitemap is in evals/files/eval-3/sitemap.xml, an internal listing page is in evals/files/eval-3/index.html, and context is in evals/files/eval-3/context.md. Produce a full gate report with PASS/FAIL verdict per check, concrete evidence, and fix suggestions for any FAIL.",
+      "expected_output": "A gate report that FLAGS check #3 (robots/noindex) as FAIL because the page carries an unexpected noindex on a production page, with evidence.",
+      "files": ["evals/files/eval-3/page.html", "evals/files/eval-3/sitemap.xml", "evals/files/eval-3/index.html", "evals/files/eval-3/context.md"],
+      "assertions": [
+        "Check 3 (robots/noindex) is flagged FAIL, not PASS",
+        "The report quotes the actual noindex directive (e.g. the meta robots tag or X-Robots-Tag)",
+        "The report gives an overall verdict of FAIL",
+        "The report notes the page is meant to be indexed, so the noindex is unexpected",
+        "The report recommends removing the noindex directive as the fix",
+        "The report also flags check 6 (sitemap) as FAIL because the pricing URL is absent from sitemap.xml",
+        "The report also flags check 7 (internal inbound links) as FAIL because nothing links to the pricing URL",
+        "The report has seven numbered sections in order 1 to 7",
+        "Each of the seven sections contains a Verdict, Evidence, and Fix field",
+        "The overall Verdict is stated as exactly FAIL"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "wrong-canonical",
+      "prompt": "The tool page https://example.com/tools/keyword-extractor is about to ship to production. Run the SEO pre-flight gate on it. The preview server-side HTML is in evals/files/eval-4/page.html, the site sitemap is in evals/files/eval-4/sitemap.xml, an internal listing page is in evals/files/eval-4/index.html, and context is in evals/files/eval-4/context.md. Produce a full gate report with PASS/FAIL verdict per check, concrete evidence, and fix suggestions for any FAIL.",
+      "expected_output": "A gate report that FLAGS check #2 (canonical) as FAIL because the canonical points at a different URL than the target (or there are conflicting/duplicate canonicals), with evidence.",
+      "files": ["evals/files/eval-4/page.html", "evals/files/eval-4/sitemap.xml", "evals/files/eval-4/index.html", "evals/files/eval-4/context.md"],
+      "assertions": [
+        "Check 2 (canonical) is flagged FAIL, not PASS",
+        "The report explains that the canonical href does not match the target URL (different path or query)",
+        "The report quotes the actual canonical href value it inspected",
+        "The report gives an overall verdict of FAIL",
+        "The report has seven numbered sections in order 1 to 7",
+        "Each of the seven sections contains a Verdict, Evidence, and Fix field"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "multiple-h1",
+      "prompt": "The guide page https://example.com/blog/anchor-text-guide is about to ship to production. Run the SEO pre-flight gate on it. The preview server-side HTML is in evals/files/eval-5/page.html, the site sitemap is in evals/files/eval-5/sitemap.xml, an internal listing page is in evals/files/eval-5/index.html, and context is in evals/files/eval-5/context.md. Produce a full gate report with PASS/FAIL verdict per check, concrete evidence, and fix suggestions for any FAIL.",
+      "expected_output": "A gate report that FLAGS check #4 (server-side content) as FAIL because the raw server HTML contains more than one H1, with evidence.",
+      "files": ["evals/files/eval-5/page.html", "evals/files/eval-5/sitemap.xml", "evals/files/eval-5/index.html", "evals/files/eval-5/context.md"],
+      "assertions": [
+        "Check 4 (server-side content) is flagged FAIL because there is more than one H1",
+        "The report states the number of H1 tags it counted",
+        "The report gives an overall verdict of FAIL",
+        "The report has seven numbered sections in order 1 to 7",
+        "Each of the seven sections contains a Verdict, Evidence, and Fix field"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "noindex-header",
+      "prompt": "The product page https://example.com/backlink-tracker is about to ship to production. Run the SEO pre-flight gate on it. The preview server-side HTML is in evals/files/eval-6/page.html, the site sitemap is in evals/files/eval-6/sitemap.xml, an internal listing page is in evals/files/eval-6/index.html, and context is in evals/files/eval-6/context.md. Produce a full gate report with PASS/FAIL verdict per check, concrete evidence, and fix suggestions for any FAIL.",
+      "expected_output": "A gate report that FLAGS check #3 (robots/noindex) as FAIL because the X-Robots-Tag HTTP header carries noindex, with evidence pointing to the header.",
+      "files": ["evals/files/eval-6/page.html", "evals/files/eval-6/sitemap.xml", "evals/files/eval-6/index.html", "evals/files/eval-6/context.md"],
+      "assertions": [
+        "Check 3 (robots/noindex) is flagged FAIL, not PASS",
+        "The report identifies the X-Robots-Tag header (not only the meta tag) as the source of the noindex",
+        "The report gives an overall verdict of FAIL",
+        "The report has seven numbered sections in order 1 to 7",
+        "Each of the seven sections contains a Verdict, Evidence, and Fix field"
+      ]
+    },
+    {
+      "id": 7,
+      "name": "missing-input-sitemap",
+      "prompt": "The tool page https://example.com/tools/schema-generator is about to ship to production. Run the SEO pre-flight gate on it. The preview server-side HTML is in evals/files/eval-7/page.html, and context about the page is in evals/files/eval-7/context.md. Note: NO sitemap file and NO internal pages were provided. Produce a full gate report with PASS/FAIL verdict per check, concrete evidence, and fix suggestions for any FAIL.",
+      "expected_output": "A gate report that correctly handles missing inputs: check 6 (sitemap) and check 7 (internal links) are marked N/A (cannot verify), NOT FAIL, with explanation of the missing input — but the overall verdict is FAIL because the evidence is incomplete (evidence incomplete / cannot release).",
+      "files": ["evals/files/eval-7/page.html", "evals/files/eval-7/context.md"],
+      "assertions": [
+        "Check 6 (sitemap) is marked N/A (cannot verify), NOT FAIL, because no sitemap was provided",
+        "Check 7 (internal inbound links) is marked N/A (cannot verify), NOT FAIL, because no internal pages were provided",
+        "The report does not fabricate a sitemap match or a status code",
+        "The report explains which input was missing for each N/A",
+        "The overall Verdict is FAIL (not PASS) because the evidence is incomplete",
+        "The Summary includes an evidence incomplete / cannot release note naming the unverifiable inputs",
+        "The report has seven numbered sections in order 1 to 7",
+        "Each of the seven sections contains a Verdict, Evidence, and Fix field"
+      ]
+    },
+    {
+      "id": 8,
+      "name": "client-only-internal-link",
+      "prompt": "The tool page https://example.com/tools/outreach-helper is about to ship to production. Run the SEO pre-flight gate on it. The preview server-side HTML is in evals/files/eval-8/page.html, the site sitemap is in evals/files/eval-8/sitemap.xml, an internal listing page is in evals/files/eval-8/index.html, and context is in evals/files/eval-8/context.md. Produce a full gate report with PASS/FAIL verdict per check, concrete evidence, and fix suggestions for any FAIL.",
+      "expected_output": "A gate report that FLAGS check #7 (internal inbound links) as FAIL (weak) because the only link to the target is client-side-rendered, not a server-rendered <a href>, with a clear explanation.",
+      "files": ["evals/files/eval-8/page.html", "evals/files/eval-8/sitemap.xml", "evals/files/eval-8/index.html", "evals/files/eval-8/context.md"],
+      "assertions": [
+        "Check 7 (internal inbound links) is flagged FAIL (weak), not PASS",
+        "The report explains the link to the target exists only in client-side JavaScript, not in server-rendered HTML",
+        "The report quotes or cites the client-side-rendered link evidence",
+        "The report gives an overall verdict of FAIL",
+        "The report has seven numbered sections in order 1 to 7",
+        "Each of the seven sections contains a Verdict, Evidence, and Fix field"
+      ]
+    }
+  ]
+}
