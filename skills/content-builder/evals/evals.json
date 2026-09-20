@@ -1,0 +1,50 @@
+{
+  "skill_name": "content-builder",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I want to build a new template page for the keyword \"nurse schedule template\". Can you get that going?",
+      "expected_output": "Should start the full pipeline rather than writing copy. Should first locate and read the project profile (CONTENT.md / content-profile.md / the site's content docs) before touching any project file. Should check the keyword registry for a conflict with an existing page. Should dispatch or perform SERP research (top results, page types, SERP features, and an explicit intent conclusion), and record how/when the SERP was captured with its personalization caveats. Should then produce an outline document containing: header (keyword with computed length, page type, URL, language, reader), the SERP evidence, the competitive gap, a structure table with word and keyword budgets, the title family (H1 / meta title / meta description with lengths), the distributed keyword plan, link plan with inlinks, acceptance criteria split into machine-checkable and human, an implementation checklist, and open questions. Should compute the keyword budget with the density formula (occurrences = words x target / keyword length, function words at 0.5) rather than guessing. Should stop and explicitly ask for outline approval before writing any body copy.",
+      "assertions": [
+        "Reads the project profile before editing anything",
+        "Checks the keyword registry for cannibalization",
+        "Performs or delegates SERP research and records capture caveats",
+        "States an explicit search-intent conclusion that determines the page type",
+        "Produces an outline document rather than body copy",
+        "Includes a structure table with word and keyword budgets",
+        "Computes the keyword budget with the density formula",
+        "Asks for explicit outline approval before writing",
+        "Lists inlinks, not only outbound links"
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Write me an article about scheduling.",
+      "expected_output": "Should NOT start writing. The request has no keyword, no page type and no target locale, which are the inputs the pipeline needs. Should ask for or propose the missing inputs (target keyword, intended reader, language/locale, page type), ideally offering a concrete candidate keyword derived from the site's existing keyword registry or strategy doc. Should explain the process it will follow (SERP research -> outline -> approval -> draft -> verification) and the one-keyword-per-page rule. Should not produce a generic article, and should not invent a keyword without confirming it and checking the registry for conflicts.",
+      "assertions": [
+        "Does not start writing body copy",
+        "Asks for or proposes the missing keyword and page type instead of guessing silently",
+        "Mentions the one-keyword-per-page rule",
+        "Describes the outline-first workflow and the approval gate",
+        "Checks or offers to check the keyword registry for conflicts",
+        "Does not produce a generic scheduling article"
+      ],
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "My FAQ section is 60 words and the target keyword \"PDF to Word\" appears twice in it. Is my keyword density OK?",
+      "expected_output": "Should apply the project's density method rather than the naive occurrences/words formula. Should compute the keyword length as 2.5 (\"to\" is a function word and counts as 0.5) and explain why multi-word keywords are weighted by length. Should explain that a 60-word slice is too small to support a density verdict - two hits in 60 words is 8.3% and meaningless - and that small slices should be judged by occurrence count instead. Should state the correct target for a real page (default 2%, band 1-3%) and give the occurrence budget for the page's actual length, e.g. roughly 8 hits per 1,000 words for this keyword. Should point at the density script as the way to get exact numbers.",
+      "assertions": [
+        "Uses the length-weighted formula, not occurrences/words",
+        "Treats \"to\" as 0.5 so the keyword length is 2.5",
+        "Refuses to give a density verdict for the 60-word slice and explains the small-sample problem",
+        "States the default target density (about 2%, band 1-3%) and derives occurrences from word count",
+        "Gives a concrete occurrence budget (about 8 per 1,000 words for this keyword)",
+        "Points to the script for exact numbers"
+      ],
+      "files": []
+    }
+  ]
+}

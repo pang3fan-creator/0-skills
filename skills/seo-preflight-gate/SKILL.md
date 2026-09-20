@@ -11,24 +11,17 @@ ranking audit, not a content quality audit, and not a keyword recommendation.
 Do not wander into those. The gate answers one question: "will this page enter
 the index cleanly?" If it won't, say so and say why.
 
-A page can build and deploy successfully and still ship with SEO that doesn't
-survive first contact with a crawler. Title and H1 rendered only on the client,
-a missing hreflang pair, a stray noindex, a URL not in the sitemap, or a page
-with no internal links in — each of these silently costs you discovery. The gate
-catches them before a human ever opens Search Console.
+A page can build and deploy successfully and still ship with SEO that doesn't survive first contact with a crawler. Title and H1 rendered only on the client, 
+a missing hreflang pair, a stray noindex, a URL not in the sitemap, or a page with no internal links in — each of these silently costs you discovery. The  gate catches them before a human ever opens Search Console.
 
 ## Inputs
 
 At minimum you need:
 
-- **Environment** — whether you are inspecting the **Preview** (staging/preview)
-  response or the **Production** live response. State this explicitly; preview
-  and production can carry different robots directives (preview often sets
-  `noindex` deliberately — that does not automatically mean production is wrong).
+- **Environment** — whether you are inspecting the **Preview** (staging/preview) response or the **Production** live response. State this explicitly; preview
+  and production can carry different robots directives (preview often sets `noindex` deliberately — that does not automatically mean production is wrong).
 - **Target production URL** — the canonical URL the page will live at.
-- **Page server-side HTML** — the HTML the server returns, not what the browser
-  renders. If you only have the browser DOM, flag that as a problem in itself:
-  client-rendered-only pages can hide content from Googlebot.
+- **Page server-side HTML** — the HTML the server returns, not what the browser renders. If you only have the browser DOM, flag that as a problem in itself: client-rendered-only pages can hide content from Googlebot.
 
 Optionally (to fully verify checks 6 and 7):
 
@@ -42,20 +35,12 @@ Every check returns one of three verdicts:
 - **PASS** — verified, no problem.
 - **FAIL** — verified problem that blocks indexing/discovery. Requires evidence
   and a fix.
-- **N/A** — the check does not apply **OR** cannot be verified with the inputs
-  you have. Whenever you use `N/A`, state **which** of the two it is and why:
-  - `N/A (does not apply)` — the check genuinely isn't relevant (e.g. a
-    single-language page has no hreflang to check).
-  - `N/A (cannot verify)` — the check is relevant but the input needed to judge
-    it wasn't provided (e.g. no sitemap file, no internal pages to scan, no HTTP
-    response available).
+- **N/A** — the check does not apply **OR** cannot be verified with the inputs you have. Whenever you use `N/A`, state **which** of the two it is and why:
+  - `N/A (does not apply)` — the check genuinely isn't relevant (e.g. a single-language page has no hreflang to check).
+  - `N/A (cannot verify)` — the check is relevant but the input needed to judge it wasn't provided (e.g. no sitemap file, no internal pages to scan, no HTTP response available).
 
-**The non-negotiable rule:** you must not treat a missing input as a FAIL. An
-absent sitemap file is NOT proof the URL is missing from the sitemap. Only judge
-`FAIL` when you actually observed the problem (the tag, header, or absence is in
-front of you, or the context explicitly states the thing is missing/faulty).
-When in doubt, `N/A (cannot verify)` with a one-line reason — never invent
-evidence. Never fabricate a `curl` result, an HTTP status, or a URL that isn't
+**The non-negotiable rule:** you must not treat a missing input as a FAIL. An absent sitemap file is NOT proof the URL is missing from the sitemap. Only judge `FAIL` when you actually observed the problem (the tag, header, or absence is in front of you, or the context explicitly states the thing is missing/faulty). 
+When in doubt, `N/A (cannot verify)` with a one-line reason — never invent evidence. Never fabricate a `curl` result, an HTTP status, or a URL that isn't
 in the provided inputs.
 
 **Overall verdict — how it combines:**
