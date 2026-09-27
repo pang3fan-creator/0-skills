@@ -89,7 +89,7 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 
 ## 测试策略
 
-开发过程中，只准跑定向测试，不准跑全量测试
+只准跑定向测试，不准跑全量测试
 
 ## 内存与并发
 
