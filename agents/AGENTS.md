@@ -1,5 +1,3 @@
-<\!-- karpathy:START -->
-
 # `Karpathy`
 
 Behavioral guidelines to reduce common LLM coding mistakes. Merge with project-specific instructions as needed.
@@ -71,10 +69,6 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 
 **These guidelines are working if:** fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and clarifying questions come before implementation rather than after mistakes.
 
-<\!-- karpathy:END -->
-
-<\!-- User:START -->
-
 # `User`
 
 ## 关于用户
@@ -109,5 +103,3 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 | ---------------------- | ------------------------------------------------------------ |
 | **响应式**             | 桌面端和移动端必须同步修改，移动端和桌面端一样重要。         |
 | **多语言（零硬编码）** | 所有用户可见文本、错误提示、状态消息、SEO 元数据（title/description/OG/twitter）、JSON-LD 结构化数据描述，都必须从翻译文件获取，不得用任何语言字面量硬编码。翻译文件有翻译但组件未引用 = 等于白做 |
-
-<\!-- User:END -->
