@@ -47,6 +47,7 @@ After adding or renaming a skill, add/update its row in `README.md`.
 ## Gotchas
 
 - **`agents/AGENTS.md` is symlinked to `~/.pi/agent/AGENTS.md`.** Editing it changes global agent behavior in every working directory. Keep it generic; repo-specific rules belong in this file.
+- The `Karpathy` section of `agents/AGENTS.md` is vendored verbatim from an external source: never edit it line by line. Keep it as-is or delete the whole section (the top-of-file precedence line references it — delete that too).
 - Both this file and the symlinked global one load together — do not duplicate their content here.
 - Installed skills are **copies**, not symlinks. After editing a skill here, re-sync or the agent keeps running the stale copy: `diff -rq skills/<name> ~/.agents/skills/<name>` (ignore `.DS_Store` noise).
 - `hooks/`, `lsps/`, `mcps/`, `plugins/` are empty, so git does not track them — they are absent in a fresh clone.
