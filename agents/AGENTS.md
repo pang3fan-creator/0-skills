@@ -1,3 +1,5 @@
+> **冲突时的优先级**：`User` 节是硬约束，优先于 `Karpathy` 节；`Karpathy` 节仅在未被 `User` 覆盖处生效。
+
 # `Karpathy`
 
 Behavioral guidelines to reduce common LLM coding mistakes. Merge with project-specific instructions as needed.
@@ -83,9 +85,9 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 
 ## 测试策略
 
-只准跑定向测试，不准跑全量测试
+只准跑定向测试，不准跑全量测试（"全量" = 整套测试；单个 E2E 用例不算）
 
-永远不要在编写完代码后，再编写单元测试
+永远不要在编写完代码后，再编写单元测试（复现 / 回归测试除外）
 
 `TDD`驱动：如果必须孤立地测试一个系统，首先写下它可能失败的所有方式，然后再编写代码
 
@@ -93,7 +95,7 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 
 ## 内存与并发
 
-不得同时启动多份构建、多份完整测试、多份开发服务器
+不得同时启动多份构建、多份完整测试、多份开发服务器（主代理与子代理合计，同时最多各一份）
 
 **主动且合理**的使用子代理，但**同时最多**运行一个主代理和三个子代理，避免爆掉内存
 
