@@ -8,6 +8,7 @@ A collection of agent-agnostic skills, subagents, and commands for AI coding age
 |-------|-------------|
 | **agent-automation-recommender** | Analyze a codebase and recommend agent automations (subagents, skills, hooks, plugins, MCP servers) |
 | **agent-md-improver** | Audit and improve AGENTS.md files across a codebase |
+| **cn-plain-answer** | Constrain the assistant's Chinese session output to controlled plain Chinese on demand (explicit `/skill:` invocation) |
 | **content-builder** | Take a keyword from SERP research to an approved outline, human-sounding copy, titles, internal links, and a computed keyword-density report |
 | **interface-design** | Design systems and pixel-level UI for dashboards, apps, and internal tools (not marketing sites) |
 | **nextjs-tanstack-port** | Port Next.js (App Router) pages or MDX/fumadocs content into a TanStack Start (Vite) project |
